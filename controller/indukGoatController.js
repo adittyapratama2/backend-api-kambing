@@ -1,10 +1,10 @@
-const { Goat, IndukKambing, PejantanKambing, Kandang } = require("../models");
+const { IndukKambing } = require("../models");
 const QRCode = require("qrcode");
 
 // Create a new goat
-exports.createGoat = async (req, res) => {
+exports.createIndukan = async (req, res) => {
   try {
-    const goat = await Goat.create(req.body);
+    const goat = await IndukKambing.create(req.body);
     res.status(201).json(goat);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -12,33 +12,19 @@ exports.createGoat = async (req, res) => {
 };
 
 // Get all goats
-exports.getGoats = async (req, res) => {
+exports.getIndukan = async (req, res) => {
   try {
-    const induk_betina = await IndukKambing.findAll();
-    const goats = await Goat.findAll();
-    const induk_pejantan = await PejantanKambing.findAll();
-    res.json({
-      data: {
-        kambing: goats,
-        induk_betina: induk_betina,
-        induk_pejantan: induk_pejantan,
-      },
-    });
+    const goats = await IndukKambing.findAll();
+    res.json(goats);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 // Get a single goat by ID
-exports.getGoat = async (req, res) => {
+exports.getIndukanById = async (req, res) => {
   try {
-    const goat = await Goat.findByPk(req.params.id, {
-      include: [
-        { model: IndukKambing, as: "indukBetina" },
-        { model: PejantanKambing, as: "indukPejantan" },
-        { model: Kandang, as: "kandangKambing" },
-      ],
-    });
+    const goat = await IndukKambing.findByPk(req.params.id);
 
     if (!goat) return res.status(404).json({ error: "Goat not found" });
 
@@ -53,9 +39,9 @@ exports.getGoat = async (req, res) => {
 };
 
 // Update a goat by ID
-exports.updateGoat = async (req, res) => {
+exports.updateIndukan = async (req, res) => {
   try {
-    const goat = await Goat.findByPk(req.params.id);
+    const goat = await IndukKambing.findByPk(req.params.id);
     if (!goat) return res.status(404).json({ error: "Goat not found" });
     await goat.update(req.body);
     res.json(goat);
@@ -65,9 +51,9 @@ exports.updateGoat = async (req, res) => {
 };
 
 // Delete a goat by ID
-exports.deleteGoat = async (req, res) => {
+exports.deleteIndukan = async (req, res) => {
   try {
-    const goat = await Goat.findByPk(req.params.id);
+    const goat = await IndukKambing.findByPk(req.params.id);
     if (!goat) return res.status(404).json({ error: "Goat not found" });
     await goat.destroy();
     res.status(204).end();

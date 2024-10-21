@@ -5,17 +5,23 @@ const { User } = require("../models");
 // Register user
 exports.register = async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, name, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
+      name,
       password: hashedPassword,
       role,
     });
 
     res
       .status(201)
-      .json({ id: user.id, username: user.username, role: user.role });
+      .json({
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+      });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -32,9 +38,11 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "2h" }
     );
-    res.json({ status: true, data: user, token: token });
+    const userWithoutPassword = user.toJSON(); // Convert to a plain object
+    delete userWithoutPassword.password; // Remove the password field
+    res.json({ status: true, data: userWithoutPassword, token: token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

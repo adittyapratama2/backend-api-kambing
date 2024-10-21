@@ -2,7 +2,9 @@ const { User } = require("../models");
 
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      attributes: { exclude: ["password"] }, // Exclude the password field
+    });
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
   } catch (error) {

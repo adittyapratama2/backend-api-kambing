@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Goat = sequelize.define("Goat", {
+  const IndukBetina = sequelize.define("Induk_betina", {
     noTag: {
       type: DataTypes.STRING,
       unique: true,
@@ -7,18 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     nama_kambing: DataTypes.STRING,
     ras: DataTypes.STRING,
-    tanggal_lahir: DataTypes.DATE,
-    jenis_kelamin: DataTypes.ENUM("jantan", "betina"),
-    id_kambing_betina: DataTypes.INTEGER,
-    id_kambing_jantan: DataTypes.INTEGER,
-    id_kandang: DataTypes.INTEGER,
     warna_dominan: DataTypes.STRING,
-    status: DataTypes.ENUM("hidup", "mati"),
   });
 
-  Goat.beforeCreate(async (goat, options) => {
+  IndukBetina.beforeCreate(async (goat, options) => {
     // Get the maximum existing tag number
-    const lastGoat = await Goat.findOne({
+    const lastGoat = await IndukBetina.findOne({
       order: [["createdAt", "DESC"]],
     });
 
@@ -29,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       newTagNumber = (lastTagNumber + 1).toString().padStart(4, "0");
     }
 
-    goat.noTag = `K${newTagNumber}`;
+    goat.noTag = `I${newTagNumber}`;
   });
 
-  return Goat;
+  return IndukBetina;
 };
