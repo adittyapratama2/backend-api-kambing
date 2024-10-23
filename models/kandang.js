@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     nama_kandang: DataTypes.STRING,
     lokasi: DataTypes.STRING,
     kapasitas: DataTypes.INTEGER,
-    jenis_kandang: DataTypes.ENUM("xxx", "xxxx"),
+    jenis_kandang: DataTypes.ENUM("1", "2"),
     catatan: DataTypes.TEXT,
   });
 
