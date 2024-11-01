@@ -3,6 +3,8 @@ const {
   KesehatanKambing,
   PertumbuhanKambing,
   PemerahanKambing,
+  ProduksiSusu,
+  PakanKambing,
 } = require("../models");
 
 // Create a new care record
@@ -17,7 +19,7 @@ exports.createCare = async (req, res) => {
 
 // Get all care records
 exports.getCares = async (req, res) => {
-  const { limit = 10, offset = 0 } = req.query; // Default limit and offset values
+  const { limit, offset } = req.query; // Default limit and offset values
 
   try {
     const pertumbuhan = await PertumbuhanKambing.findAndCountAll({
@@ -32,6 +34,18 @@ exports.getCares = async (req, res) => {
       order: [["createdAt", "DESC"]], // Fetch newest data first
     });
 
+    const produksi_susu = await ProduksiSusu.findAndCountAll({
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [["createdAt", "DESC"]], // Fetch newest data first
+    });
+
+    const pakan_kandang = await PakanKambing.findAndCountAll({
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [["createdAt", "DESC"]], // Fetch newest data first
+    });
+
     const kesehatan = await KesehatanKambing.findAndCountAll({
       limit: parseInt(limit),
       offset: parseInt(offset),
@@ -39,11 +53,6 @@ exports.getCares = async (req, res) => {
     });
 
     res.json({
-      all: {
-        pertumbuhan: pertumbuhan.rows,
-        pemerahan: pemerahan.rows,
-        kesehatan: kesehatan.rows,
-      },
       pertumbuhan: {
         data: pertumbuhan.rows,
         total: pertumbuhan.count,
@@ -59,6 +68,18 @@ exports.getCares = async (req, res) => {
       kesehatan: {
         data: kesehatan.rows,
         total: kesehatan.count,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      produksi_susu: {
+        data: produksi_susu.rows,
+        total: produksi_susu.count,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      pakan_kandang: {
+        data: pakan_kandang.rows,
+        total: pakan_kandang.count,
         limit: parseInt(limit),
         offset: parseInt(offset),
       },

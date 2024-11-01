@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const IndukBetina = sequelize.define("Induk_betina", {
     noTag: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(64),
       unique: true,
       allowNull: true,
     },

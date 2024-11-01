@@ -11,3 +11,12 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getUserAll = async (req, res) => {
+  try {
+    const result = await User.findAll();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

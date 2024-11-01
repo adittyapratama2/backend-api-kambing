@@ -1,19 +1,19 @@
 const { Op } = require("sequelize");
-const { Goat, PemerahanKambing } = require("../models");
+const { Goat, ProduksiSusu } = require("../models");
 const moment = require("moment/moment");
 
-exports.createPemerahan = async (req, res) => {
+exports.createProduksiSusu = async (req, res) => {
   try {
-    const { id_kambing, tanggal_perah } = req.body;
+    const { id_kambing, tanggal_produksi } = req.body;
 
     // Format the date to only include year, month, and day
-    const dateOnly = moment(tanggal_perah).format("YYYY-MM-DD");
+    const dateOnly = moment(tanggal_produksi).format("YYYY-MM-DD");
 
     // Check if a record already exists for the same id_kambing on the same date
-    const existingRecord = await PemerahanKambing.findOne({
+    const existingRecord = await ProduksiSusu.findOne({
       where: {
         id_kambing: id_kambing,
-        tanggal_perah: {
+        tanggal_produksi: {
           [Op.between]: [`${dateOnly} 00:00:00`, `${dateOnly} 23:59:59`],
         },
       },
@@ -26,32 +26,32 @@ exports.createPemerahan = async (req, res) => {
     }
 
     // If no record exists, create a new one
-    const response = await PemerahanKambing.create(req.body);
+    const response = await ProduksiSusu.create(req.body);
     res.status(201).json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-exports.getPemerahan = async (req, res) => {
+exports.getProduksiSusu = async (req, res) => {
   const { start, end } = req.query;
 
   try {
     // Build the query options
     const queryOptions = {
-      include: [{ model: Goat, as: "perahKambing" }],
+      include: [{ model: Goat, as: "produksiSusu" }],
     };
 
     // If startDate and endDate are provided, add a where clause to filter by tanggal_pencatatan
     if (start && end) {
       queryOptions.where = {
-        tanggal_pencatatan: {
+        tanggal_produksi: {
           [Op.between]: [new Date(start), new Date(end)], // Using Sequelize's Op.between for range
         },
       };
     }
 
-    const response = await PemerahanKambing.findAll(queryOptions);
+    const response = await ProduksiSusu.findAll(queryOptions);
     res.json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });

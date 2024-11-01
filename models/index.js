@@ -20,6 +20,8 @@ db.Perkawinan = require("./perkawinan")(sequelize, Sequelize);
 db.PertumbuhanKambing = require("./pertumbuhan")(sequelize, Sequelize);
 db.PemerahanKambing = require("./pemerahan")(sequelize, Sequelize);
 db.KesehatanKambing = require("./kesehatan")(sequelize, Sequelize);
+db.ProduksiSusu = require("./produksi_susu")(sequelize, Sequelize);
+db.PakanKambing = require("./pakan")(sequelize, Sequelize);
 
 // Define relationships
 
@@ -127,6 +129,30 @@ db.KesehatanKambing.belongsTo(db.Goat, {
   foreignKey: "id_kambing",
   targetKey: "id",
   as: "kesehatanKambing",
+});
+
+db.Kandang.hasMany(db.PakanKambing, {
+  foreignKey: "id_kandang",
+  targetKey: "id",
+  as: "pakanKandang",
+});
+
+db.PakanKambing.belongsTo(db.Kandang, {
+  foreignKey: "id_kandang",
+  targetKey: "id",
+  as: "pakanKandang",
+});
+
+db.Goat.hasMany(db.ProduksiSusu, {
+  foreignKey: "id_kambing",
+  targetKey: "id",
+  as: "produksiSusu",
+});
+
+db.ProduksiSusu.belongsTo(db.Goat, {
+  foreignKey: "id_kambing",
+  targetKey: "id",
+  as: "produksiSusu",
 });
 
 module.exports = db;

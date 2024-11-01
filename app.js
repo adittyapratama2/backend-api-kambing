@@ -15,16 +15,19 @@ app.use("/v1/goats", goatRoutes);
 app.use("/v1/cares", careRoutes);
 app.use("/v1/users", userRoutes);
 app.use("/v1/kandang", require("./routes/kandang"));
+app.use("/v1/pakan-kandang", require("./routes/pakan"));
 app.use("/v1/induk-betina", require("./routes/indukan"));
 app.use("/v1/induk-pejantan", require("./routes/pejantan"));
 app.use("/v1/perkawinan", require("./routes/perkawinan"));
 app.use("/v1/pertumbuhan-kambing", require("./routes/pertumbuhan"));
 app.use("/v1/pemerahan-kambing", require("./routes/pemerahan"));
 app.use("/v1/kesehatan-kambing", require("./routes/kesehatan"));
+app.use("/v1/produksi-susu-kambing", require("./routes/produksiSusu"));
+app.use("/v1/laporan-kambing", require("./routes/laporan"));
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  sequelize.sync({ alter: true });
+  sequelize.sync({ alter: false });
 });

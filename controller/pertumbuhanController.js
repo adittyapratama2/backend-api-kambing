@@ -1,7 +1,31 @@
+const { Op } = require("sequelize");
 const { Goat, PertumbuhanKambing } = require("../models");
+const moment = require("moment/moment");
 
 exports.createPertumbuhan = async (req, res) => {
   try {
+    const { id_kambing, tanggal_pencatatan } = req.body;
+
+    // Format the date to only include year, month, and day
+    const dateOnly = moment(tanggal_pencatatan).format("YYYY-MM-DD");
+
+    // Check if a record already exists for the same id_kambing on the same date
+    const existingRecord = await PertumbuhanKambing.findOne({
+      where: {
+        id_kambing: id_kambing,
+        tanggal_pencatatan: {
+          [Op.between]: [`${dateOnly} 00:00:00`, `${dateOnly} 23:59:59`],
+        },
+      },
+    });
+
+    if (existingRecord) {
+      return res.status(400).json({
+        message: "Kambing sudah melakukan pencatatan pada tanggal ini.",
+      });
+    }
+
+    // If no record exists, create a new one
     const response = await PertumbuhanKambing.create(req.body);
     res.status(201).json(response);
   } catch (error) {

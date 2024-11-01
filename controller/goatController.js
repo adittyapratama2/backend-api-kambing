@@ -42,7 +42,12 @@ exports.getGoat = async (req, res) => {
 
     if (!goat) return res.status(404).json({ error: "Goat not found" });
 
-    const qrCodeGoat = await QRCode.toDataURL(goat.id.toString(), {
+    const qrCodeData = JSON.stringify({
+      id: goat.id,
+      jenis: "kambing",
+    });
+
+    const qrCodeGoat = await QRCode.toDataURL(qrCodeData, {
       width: 500,
     });
 

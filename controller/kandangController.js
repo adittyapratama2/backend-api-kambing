@@ -28,7 +28,12 @@ exports.getKandangById = async (req, res) => {
 
     if (!kandang) return res.status(404).json({ error: "Kandang not found" });
 
-    const qrCode = await QRCode.toDataURL(kandang.id.toString(), {
+    const qrCodeData = JSON.stringify({
+      id: kandang.id,
+      jenis: "kandang",
+    });
+
+    const qrCode = await QRCode.toDataURL(qrCodeData.toString(), {
       width: 500,
     });
 
