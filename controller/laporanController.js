@@ -8,6 +8,7 @@ const {
   PemerahanKambing,
   ProduksiSusu,
   KesehatanKambing,
+  PakanKambing,
 } = require("../models");
 
 exports.getDashboardLaporan = async (req, res) => {
@@ -215,6 +216,43 @@ exports.getLaporanKambingById = async (req, res) => {
       perah: pemerahanData,
       kesehatan: kesehatanData,
       susu: prodSusuData,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving data" });
+  }
+};
+
+exports.getLaporanKandangById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const { start, end } = req.query;
+
+    const kandangId = await Kandang.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    const kandangKambing = await PakanKambing.findAll({
+      where: {
+        id_kandang: id,
+        tgl_transaksi: { [Op.between]: [start, end] },
+      },
+    });
+
+    const pakanData = kandangKambing.map((entry) => ({
+      date: entry.tgl_transaksi,
+      qtyPakan: entry.qty_pakan,
+      catatan: entry.catatan,
+    }));
+
+    res.status(200).json({
+      data: kandangId,
+      pakan: pakanData,
     });
   } catch (error) {
     console.error(error);
