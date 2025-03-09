@@ -57,3 +57,23 @@ exports.getKesehatan = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteKesehatan = async (req, res) => {
+  try {
+    const { id } = req.params; // Assuming the record's id is passed as a URL parameter
+
+    // Find the record by its primary key
+    const record = await KesehatanKambing.findByPk(id);
+    if (!record) {
+      return res
+        .status(404)
+        .json({ message: "Data pencatatan tidak ditemukan." });
+    }
+
+    // Delete the record
+    await record.destroy();
+    res.json({ message: "Data pencatatan berhasil dihapus." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

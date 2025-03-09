@@ -14,7 +14,7 @@ router.use(authenticate);
 router.post("/", createGoat);
 router.get("/", getGoats);
 router.get("/:id", getGoat);
-router.put("/:id", updateGoat);
+router.patch("/:id", updateGoat);
 router.delete("/:id", deleteGoat);
 
 module.exports = router;

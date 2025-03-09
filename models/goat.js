@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     id_kambing_jantan: DataTypes.INTEGER,
     id_kandang: DataTypes.INTEGER,
     warna_dominan: DataTypes.STRING,
-    status: DataTypes.ENUM("1", "2"),
+    status: DataTypes.ENUM("1", "2", "3", "4", "5", "6"),
   });
 
   Goat.beforeCreate(async (goat, options) => {

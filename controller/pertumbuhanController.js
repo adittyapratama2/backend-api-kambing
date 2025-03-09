@@ -57,3 +57,64 @@ exports.getPertumbuhan = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getPertumbuhanById = async (req, res) => {
+  try {
+    const { id } = req.params; // Retrieve the record ID from the URL parameters
+
+    const record = await PertumbuhanKambing.findByPk(id, {
+      include: [{ model: Goat, as: "tumbuhKambing" }],
+    });
+
+    if (!record) {
+      return res
+        .status(404)
+        .json({ message: "Data pencatatan tidak ditemukan." });
+    }
+
+    res.json(record);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updatePertumbuhan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log("Request Body:", req.body); // Log untuk debugging
+
+    const record = await PertumbuhanKambing.findByPk(id);
+
+    if (!record) {
+      return res
+        .status(404)
+        .json({ message: "Data pencatatan tidak ditemukan." });
+    }
+
+    await record.update(req.body);
+    res.json(record);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deletePertumbuhan = async (req, res) => {
+  try {
+    const { id } = req.params; // Assuming the record's id is passed as a URL parameter
+
+    // Find the record by its primary key
+    const record = await PertumbuhanKambing.findByPk(id);
+    if (!record) {
+      return res
+        .status(404)
+        .json({ message: "Data pencatatan tidak ditemukan." });
+    }
+
+    // Delete the record
+    await record.destroy();
+    res.json({ message: "Data pencatatan berhasil dihapus." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
