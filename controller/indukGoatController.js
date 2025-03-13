@@ -1,4 +1,4 @@
-const { IndukKambing } = require("../models");
+const { IndukKambing, Goat } = require("../models");
 const QRCode = require("qrcode");
 
 // Create a new goat
@@ -24,7 +24,14 @@ exports.getIndukan = async (req, res) => {
 // Get a single goat by ID
 exports.getIndukanById = async (req, res) => {
   try {
-    const goat = await IndukKambing.findByPk(req.params.id);
+    const goat = await IndukKambing.findByPk(req.params.id, {
+      include: [
+        {
+          model: Goat,
+          as: "indukBetina",
+        },
+      ],
+    });
 
     if (!goat) return res.status(404).json({ error: "Goat not found" });
 
